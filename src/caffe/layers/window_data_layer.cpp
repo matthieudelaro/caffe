@@ -1,3 +1,4 @@
+#ifdef USE_OPENCV
 #include <stdint.h>
 
 #include <algorithm>
@@ -465,3 +466,4 @@ void WindowDataLayer<Dtype>::InternalThreadEntry() {
 INSTANTIATE_CLASS(WindowDataLayer);
 REGISTER_LAYER_CLASS(WINDOW_DATA, WindowDataLayer);
 }  // namespace caffe
+#endif  // USE_OPENCV

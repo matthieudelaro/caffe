@@ -1,3 +1,4 @@
+#ifdef USE_OPENCV
 #include <fstream>  // NOLINT(readability/streams)
 #include <iostream>  // NOLINT(readability/streams)
 #include <string>
@@ -307,3 +308,4 @@ void WindowClsDataLayer<Dtype>::InternalThreadEntry() {
 INSTANTIATE_CLASS(WindowClsDataLayer);
 REGISTER_LAYER_CLASS(WINDOW_CLS_DATA, WindowClsDataLayer);
 }  // namespace caffe
+#endif  // USE_OPENCV
