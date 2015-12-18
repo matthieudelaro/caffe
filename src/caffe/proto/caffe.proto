@@ -208,6 +208,7 @@ message NetStateRule {
 // Update the next available ID when you add a new LayerParameter field.
 //
 // LayerParameter next available ID: 51 (last added: select_seg_binary_param)
+// // LayerParameter next available ID: 52 (last added: local_param)
 message LayerParameter {
   repeated string bottom = 2; // the name of the bottom blobs
   repeated string top = 3; // the name of the top blobs
@@ -228,7 +229,9 @@ message LayerParameter {
   // line above the enum. Update the next available ID when you add a new
   // LayerType.
   //
-  // LayerType next available ID: 54 (last added: DROPOUT_CHANNEL)
+  // // LayerType next available ID: 54 (last added: DROPOUT_CHANNEL)
+  // LayerType next available ID: 55 (last added: LOCAL)
+  // LayerType next available ID: 56 (last added: TWEAK_FEATURES)
   enum LayerType {
     // "NONE" layer type is 0th enum element so that we don't cause confusion
     // by defaulting to an existent LayerType (instead, should usually error if
@@ -263,6 +266,7 @@ message LayerParameter {
     INFOGAIN_LOSS = 13;
     INNER_PRODUCT = 14;
     LRN = 15;
+    LOCAL = 54;
     MEMORY_DATA = 29;
     MULTINOMIAL_LOGISTIC_LOSS = 16;
     MVN = 34;
@@ -280,7 +284,8 @@ message LayerParameter {
     SPLIT = 22;
     SLICE = 33;
     TANH = 23;
-    UNPOOLING = 42; 
+    TWEAK_FEATURES = 55;
+    UNPOOLING = 42;
     WINDOW_DATA = 24;
     WINDOW_CLS_DATA = 50;
     WINDOW_SEG_DATA = 47;
@@ -334,6 +339,7 @@ message LayerParameter {
   optional ImageDataParameter image_data_param = 15;
   optional InfogainLossParameter infogain_loss_param = 16;
   optional InnerProductParameter inner_product_param = 17;
+  optional LocalParameter local_param = 54;
   optional LRNParameter lrn_param = 18;
   optional MemoryDataParameter memory_data_param = 22;
   optional MVNParameter mvn_param = 34;
@@ -348,6 +354,7 @@ message LayerParameter {
   optional SliceParameter slice_param = 31;
   optional TanHParameter tanh_param = 37;
   optional ThresholdParameter threshold_param = 25;
+  optional TweakFeaturesParameter tweak_features_param = 55;
   optional UnpoolingParameter unpooling_param = 44;
   optional WindowClsDataParameter window_cls_data_param = 49;
   optional WindowDataParameter window_data_param = 20;
@@ -422,7 +429,7 @@ message BinaryAccuracyParameter {
     Accuracy = 0;
     Precision = 1;
     Recall = 2;
-    F_measure = 3; 
+    F_measure = 3;
   }
   optional AccuracyMode accuracy_mode = 1 [default = Accuracy];
 }
@@ -615,7 +622,7 @@ message ImageDataParameter {
   optional uint32 new_width = 10 [default = 0];
   // Specify if the images are color or gray
   optional bool is_color = 11 [default = true];
-  // This is the value seg for pixels or images where we don't know the label 
+  // This is the value seg for pixels or images where we don't know the label
   optional int32 ignore_label = 15 [default = 255];
   optional int32 other_object_label = 17 [default = 0];
   enum LabelType {
@@ -665,6 +672,17 @@ message LRNParameter {
   }
   optional NormRegion norm_region = 4 [default = ACROSS_CHANNELS];
   optional float k = 5 [default = 1.];
+}
+
+// Message that stores parameters used by LocalLayer
+message LocalParameter {
+  optional uint32 num_output = 1; // The number of outputs for the layer
+  optional bool bias_term = 2 [default = true]; // whether to have bias terms
+  optional uint32 pad = 3 [default = 0]; // The padding size
+  optional uint32 kernel_size = 4; // The kernel size
+  optional uint32 stride = 6 [default = 1]; // The stride
+  optional FillerParameter weight_filler = 7; // The filler for the weight
+  optional FillerParameter bias_filler = 8; // The filler for the bias
 }
 
 // Message that stores parameters used by MemoryDataLayer
@@ -725,7 +743,7 @@ message PowerParameter {
 message RedSoftmaxWithLossParameter {
   // number of classes in ground truth label
   optional uint32 class_num = 1;
-} 
+}
 
 // Message that stores parameters used by ReLULayer
 message ReLUParameter {
@@ -788,6 +806,23 @@ message ThresholdParameter {
   optional float threshold = 1 [default = 0]; // Strictly positive values
 }
 
+// Message that stores parameters used by TweakFeaturesLayer
+message TweakFeaturesParameter {
+  optional int32 add_value = 3 [default = 0];
+  optional int32 factor = 14 [default = 1];
+  optional int32 mode = 6 [default = 0]; // 0: fast forward (does not touch the data). 1: save. 2: modify
+  repeated double features_mean = 4 [packed=true];
+  repeated double features_median = 5 [packed=true];
+  optional string output_file_name = 7;
+
+  repeated double add_vector = 8 [packed=true];
+  repeated double multiply_by = 9 [packed=true];
+  repeated double vector_a = 10 [packed=true];
+  repeated double vector_b = 11 [packed=true];
+  repeated double vector_c = 12 [packed=true];
+  repeated double vector_d = 13 [packed=true];
+}
+
 // Message that stores parameters used by PoolingLayer
 message UnpoolingParameter {
   enum UnpoolMethod {
@@ -818,7 +853,7 @@ message UnpoolingParameter {
 }
 
 // Message that stores parameters used by WindowClsDataLayer
-message WindowClsDataParameter { 
+message WindowClsDataParameter {
   optional uint32 label_dim = 1 [default = 1];
 }
 
