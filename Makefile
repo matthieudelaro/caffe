@@ -9,16 +9,16 @@ DEBUG_BUILD_DIR ?= .$(BUILD_DIR)_debug
 
 DEBUG ?= 0
 ifeq ($(DEBUG), 1)
-	BUILD_DIR := $(DEBUG_BUILD_DIR)
-	OTHER_BUILD_DIR := $(RELEASE_BUILD_DIR)
+    BUILD_DIR := $(DEBUG_BUILD_DIR)
+    OTHER_BUILD_DIR := $(RELEASE_BUILD_DIR)
 else
-	BUILD_DIR := $(RELEASE_BUILD_DIR)
-	OTHER_BUILD_DIR := $(DEBUG_BUILD_DIR)
+    BUILD_DIR := $(RELEASE_BUILD_DIR)
+    OTHER_BUILD_DIR := $(DEBUG_BUILD_DIR)
 endif
 
 # All of the directories containing code.
 SRC_DIRS := $(shell find * -type d -exec bash -c "find {} -maxdepth 1 \
-	\( -name '*.cpp' -o -name '*.proto' \) | grep -q ." \; -print)
+    \( -name '*.cpp' -o -name '*.proto' \) | grep -q ." \; -print)
 
 # The target shared library name
 LIB_BUILD_DIR := $(BUILD_DIR)/lib
@@ -54,13 +54,13 @@ PROTO_BUILD_INCLUDE_DIR := $(BUILD_INCLUDE_DIR)/$(PROJECT)/proto
 # NONGEN_CXX_SRCS includes all source/header files except those generated
 # automatically (e.g., by proto).
 NONGEN_CXX_SRCS := $(shell find \
-	src/$(PROJECT) \
-	include/$(PROJECT) \
-	python/$(PROJECT) \
-	matlab/$(PROJECT) \
-	examples \
-	tools \
-	-name "*.cpp" -or -name "*.hpp" -or -name "*.cu" -or -name "*.cuh")
+    src/$(PROJECT) \
+    include/$(PROJECT) \
+    python/$(PROJECT) \
+    matlab/$(PROJECT) \
+    examples \
+    tools \
+    -name "*.cpp" -or -name "*.hpp" -or -name "*.cu" -or -name "*.cuh")
 LINT_SCRIPT := scripts/cpp_lint.py
 LINT_OUTPUT_DIR := $(BUILD_DIR)/.lint
 LINT_EXT := lint.txt
@@ -74,7 +74,7 @@ PY$(PROJECT)_SO := python/$(PROJECT)/_$(PROJECT).so
 # MAT$(PROJECT)_SRC is the matlab wrapper for $(PROJECT)
 MAT$(PROJECT)_SRC := matlab/$(PROJECT)/mat$(PROJECT).cpp
 ifneq ($(MATLAB_DIR),)
-	MAT_SO_EXT := $(shell $(MATLAB_DIR)/bin/mexext)
+    MAT_SO_EXT := $(shell $(MATLAB_DIR)/bin/mexext)
 endif
 MAT$(PROJECT)_SO := matlab/$(PROJECT)/$(PROJECT).$(MAT_SO_EXT)
 
@@ -83,14 +83,14 @@ MAT$(PROJECT)_SO := matlab/$(PROJECT)/$(PROJECT).$(MAT_SO_EXT)
 ##############################
 # The generated files for protocol buffers
 PROTO_GEN_HEADER_SRCS := $(addprefix $(PROTO_BUILD_DIR)/, \
-		$(notdir ${PROTO_SRCS:.proto=.pb.h}))
+        $(notdir ${PROTO_SRCS:.proto=.pb.h}))
 PROTO_GEN_HEADER := $(addprefix $(PROTO_BUILD_INCLUDE_DIR)/, \
-		$(notdir ${PROTO_SRCS:.proto=.pb.h}))
+        $(notdir ${PROTO_SRCS:.proto=.pb.h}))
 PROTO_GEN_CC := $(addprefix $(BUILD_DIR)/, ${PROTO_SRCS:.proto=.pb.cc})
 PY_PROTO_BUILD_DIR := python/$(PROJECT)/proto
 PY_PROTO_INIT := python/$(PROJECT)/proto/__init__.py
 PROTO_GEN_PY := $(foreach file,${PROTO_SRCS:.proto=_pb2.py}, \
-		$(PY_PROTO_BUILD_DIR)/$(notdir $(file)))
+        $(PY_PROTO_BUILD_DIR)/$(notdir $(file)))
 # The objects corresponding to the source files
 # These objects will be linked into the final shared library, so we
 # exclude the tool, example, and test objects.
@@ -110,7 +110,7 @@ GTEST_OBJ := $(addprefix $(BUILD_DIR)/, ${GTEST_SRC:.cpp=.o})
 EXAMPLE_OBJS := $(addprefix $(BUILD_DIR)/, ${EXAMPLE_SRCS:.cpp=.o})
 # Output files for automatic dependency generation
 DEPS := ${CXX_OBJS:.o=.d} ${CU_OBJS:.o=.d} ${TEST_CXX_OBJS:.o=.d} \
-	${TEST_CU_OBJS:.o=.d}
+    ${TEST_CU_OBJS:.o=.d}
 # tool, example, and test bins
 TOOL_BINS := ${TOOL_OBJS:.o=.bin}
 EXAMPLE_BINS := ${EXAMPLE_OBJS:.o=.bin}
@@ -119,9 +119,9 @@ TOOL_BIN_LINKS := ${TOOL_BINS:.bin=}
 # Put the test binaries in build/test for convenience.
 TEST_BIN_DIR := $(BUILD_DIR)/test
 TEST_CU_BINS := $(addsuffix .testbin,$(addprefix $(TEST_BIN_DIR)/, \
-		$(foreach obj,$(TEST_CU_OBJS),$(basename $(notdir $(obj))))))
+        $(foreach obj,$(TEST_CU_OBJS),$(basename $(notdir $(obj))))))
 TEST_CXX_BINS := $(addsuffix .testbin,$(addprefix $(TEST_BIN_DIR)/, \
-		$(foreach obj,$(TEST_CXX_OBJS),$(basename $(notdir $(obj))))))
+        $(foreach obj,$(TEST_CXX_OBJS),$(basename $(notdir $(obj))))))
 TEST_BINS := $(TEST_CXX_BINS) $(TEST_CU_BINS)
 # TEST_ALL_BIN is the test binary that links caffe statically.
 TEST_ALL_BIN := $(TEST_BIN_DIR)/test_all.testbin
@@ -153,19 +153,21 @@ CUDA_INCLUDE_DIR := $(CUDA_DIR)/include
 CUDA_LIB_DIR :=
 # add <cuda>/lib64 only if it exists
 ifneq ("$(wildcard $(CUDA_DIR)/lib64)","")
-	CUDA_LIB_DIR += $(CUDA_DIR)/lib64
+    CUDA_LIB_DIR += $(CUDA_DIR)/lib64
 endif
 CUDA_LIB_DIR += $(CUDA_DIR)/lib
 
 INCLUDE_DIRS += $(BUILD_INCLUDE_DIR) ./src ./include
 ifneq ($(CPU_ONLY), 1)
-	INCLUDE_DIRS += $(CUDA_INCLUDE_DIR)
-	LIBRARY_DIRS += $(CUDA_LIB_DIR)
-	LIBRARIES := cudart cublas curand
+    INCLUDE_DIRS += $(CUDA_INCLUDE_DIR)
+    LIBRARY_DIRS += $(CUDA_LIB_DIR)
+    LIBRARIES := cudart cublas curand
 endif
 LIBRARIES += glog gflags protobuf leveldb snappy \
-	lmdb boost_system hdf5_hl hdf5 m \
-	opencv_core opencv_highgui opencv_imgproc opencv_imgcodecs
+    lmdb boost_system hdf5_hl hdf5 m 
+    
+    # \
+    # opencv_core opencv_highgui opencv_imgproc opencv_imgcodecs
 PYTHON_LIBRARIES := boost_python python2.7
 WARNINGS := -Wall -Wno-sign-compare
 
@@ -176,13 +178,13 @@ WARNINGS := -Wall -Wno-sign-compare
 DISTRIBUTE_SUBDIRS := $(DISTRIBUTE_DIR)/bin $(DISTRIBUTE_DIR)/lib
 DIST_ALIASES := dist
 ifneq ($(strip $(DISTRIBUTE_DIR)),distribute)
-		DIST_ALIASES += distribute
+        DIST_ALIASES += distribute
 endif
 
 ALL_BUILD_DIRS := $(sort $(BUILD_DIR) $(addprefix $(BUILD_DIR)/, $(SRC_DIRS)) \
-	$(addprefix $(BUILD_DIR)/cuda/, $(SRC_DIRS)) \
-	$(LIB_BUILD_DIR) $(TEST_BIN_DIR) $(PY_PROTO_BUILD_DIR) $(LINT_OUTPUT_DIR) \
-	$(DISTRIBUTE_SUBDIRS) $(PROTO_BUILD_INCLUDE_DIR))
+    $(addprefix $(BUILD_DIR)/cuda/, $(SRC_DIRS)) \
+    $(LIB_BUILD_DIR) $(TEST_BIN_DIR) $(PY_PROTO_BUILD_DIR) $(LINT_OUTPUT_DIR) \
+    $(DISTRIBUTE_SUBDIRS) $(PROTO_BUILD_INCLUDE_DIR))
 
 ##############################
 # Set directory for Doxygen-generated documentation
@@ -193,13 +195,13 @@ DOXYGEN_OUTPUT_DIR ?= ./doxygen
 DOXYGEN_COMMAND ?= doxygen
 # All the files that might have Doxygen documentation.
 DOXYGEN_SOURCES := $(shell find \
-	src/$(PROJECT) \
-	include/$(PROJECT) \
-	python/ \
-	matlab/ \
-	examples \
-	tools \
-	-name "*.cpp" -or -name "*.hpp" -or -name "*.cu" -or -name "*.cuh" -or \
+    src/$(PROJECT) \
+    include/$(PROJECT) \
+    python/ \
+    matlab/ \
+    examples \
+    tools \
+    -name "*.cpp" -or -name "*.hpp" -or -name "*.cu" -or -name "*.cuh" -or \
         -name "*.py" -or -name "*.m")
 DOXYGEN_SOURCES += $(DOXYGEN_CONFIG_FILE)
 
@@ -211,103 +213,103 @@ DOXYGEN_SOURCES += $(DOXYGEN_CONFIG_FILE)
 # Determine platform
 UNAME := $(shell uname -s)
 ifeq ($(UNAME), Linux)
-	LINUX := 1
+    LINUX := 1
 else ifeq ($(UNAME), Darwin)
-	OSX := 1
+    OSX := 1
 endif
 
 # Linux
 ifeq ($(LINUX), 1)
-	CXX ?= /usr/bin/g++
-	GCCVERSION := $(shell $(CXX) -dumpversion | cut -f1,2 -d.)
-	# older versions of gcc are too dumb to build boost with -Wuninitalized
-	ifeq ($(shell echo $(GCCVERSION) \< 4.6 | bc), 1)
-		WARNINGS += -Wno-uninitialized
-	endif
-	# boost::thread is reasonably called boost_thread (compare OS X)
-	# We will also explicitly add stdc++ to the link target.
-	LIBRARIES += boost_thread stdc++
+    CXX ?= /usr/bin/g++
+    GCCVERSION := $(shell $(CXX) -dumpversion | cut -f1,2 -d.)
+    # older versions of gcc are too dumb to build boost with -Wuninitalized
+    ifeq ($(shell echo $(GCCVERSION) \< 4.6 | bc), 1)
+        WARNINGS += -Wno-uninitialized
+    endif
+    # boost::thread is reasonably called boost_thread (compare OS X)
+    # We will also explicitly add stdc++ to the link target.
+    LIBRARIES += boost_thread stdc++
 endif
 
 # OS X:
 # clang++ instead of g++
 # libstdc++ instead of libc++ for CUDA compatibility on 10.9
 ifeq ($(OSX), 1)
-	CXX := /usr/bin/clang++
-	# clang throws this warning for cuda headers
-	WARNINGS += -Wno-unneeded-internal-declaration
-	ifneq ($(findstring 10.9, $(shell sw_vers -productVersion)),)
-		CXXFLAGS += -stdlib=libstdc++
-		LINKFLAGS += -stdlib=libstdc++
-	endif
-	# boost::thread is called boost_thread-mt to mark multithreading on OS X
-	LIBRARIES += boost_thread-mt
+    CXX := /usr/bin/clang++
+    # clang throws this warning for cuda headers
+    WARNINGS += -Wno-unneeded-internal-declaration
+    ifneq ($(findstring 10.9, $(shell sw_vers -productVersion)),)
+        CXXFLAGS += -stdlib=libstdc++
+        LINKFLAGS += -stdlib=libstdc++
+    endif
+    # boost::thread is called boost_thread-mt to mark multithreading on OS X
+    LIBRARIES += boost_thread-mt
         NVCCFLAGS += -DOSX
 endif
 
 # Custom compiler
 ifdef CUSTOM_CXX
-	CXX := $(CUSTOM_CXX)
+    CXX := $(CUSTOM_CXX)
 endif
 
 # Static linking
 ifneq (,$(findstring clang++,$(CXX)))
-	STATIC_LINK_COMMAND := -Wl,-force_load $(STATIC_NAME)
+    STATIC_LINK_COMMAND := -Wl,-force_load $(STATIC_NAME)
 else ifneq (,$(findstring g++,$(CXX)))
-	STATIC_LINK_COMMAND := -Wl,--whole-archive $(STATIC_NAME) -Wl,--no-whole-archive
+    STATIC_LINK_COMMAND := -Wl,--whole-archive $(STATIC_NAME) -Wl,--no-whole-archive
 else
-	$(error Cannot static link with the $(CXX) compiler.)
+    $(error Cannot static link with the $(CXX) compiler.)
 endif
 
 # Debugging
 ifeq ($(DEBUG), 1)
-	COMMON_FLAGS += -DDEBUG -g -O0
-	NVCCFLAGS += -G
+    COMMON_FLAGS += -DDEBUG -g -O0
+    NVCCFLAGS += -G
 else
-	COMMON_FLAGS += -DNDEBUG -O2
+    COMMON_FLAGS += -DNDEBUG -O2
 endif
 
 # cuDNN acceleration configuration.
 ifeq ($(USE_CUDNN), 1)
-	LIBRARIES += cudnn
-	COMMON_FLAGS += -DUSE_CUDNN
+    LIBRARIES += cudnn
+    COMMON_FLAGS += -DUSE_CUDNN
 endif
 
 # CPU-only configuration
 ifeq ($(CPU_ONLY), 1)
-	OBJS := $(PROTO_OBJS) $(CXX_OBJS)
-	TEST_OBJS := $(TEST_CXX_OBJS)
-	TEST_BINS := $(TEST_CXX_BINS)
-	ALL_WARNS := $(ALL_CXX_WARNS)
-	TEST_FILTER := --gtest_filter="-*GPU*"
-	COMMON_FLAGS += -DCPU_ONLY
+    OBJS := $(PROTO_OBJS) $(CXX_OBJS)
+    TEST_OBJS := $(TEST_CXX_OBJS)
+    TEST_BINS := $(TEST_CXX_BINS)
+    ALL_WARNS := $(ALL_CXX_WARNS)
+    TEST_FILTER := --gtest_filter="-*GPU*"
+    COMMON_FLAGS += -DCPU_ONLY
 endif
 
 # BLAS configuration (default = ATLAS)
 BLAS ?= atlas
 ifeq ($(BLAS), mkl)
-	# MKL
-	LIBRARIES += mkl_rt
-	COMMON_FLAGS += -DUSE_MKL
-	MKL_DIR ?= /opt/intel/mkl
-	BLAS_INCLUDE ?= $(MKL_DIR)/include
-	BLAS_LIB ?= $(MKL_DIR)/lib $(MKL_DIR)/lib/intel64
+    # MKL
+    LIBRARIES += mkl_rt
+    COMMON_FLAGS += -DUSE_MKL
+    MKL_DIR ?= /opt/intel/mkl
+    BLAS_INCLUDE ?= $(MKL_DIR)/include
+    BLAS_LIB ?= $(MKL_DIR)/lib $(MKL_DIR)/lib/intel64
 else ifeq ($(BLAS), open)
-	# OpenBLAS
-	LIBRARIES += openblas
+    # OpenBLAS
+    LIBRARIES += openblas
 else
-	# ATLAS
-	ifeq ($(LINUX), 1)
-		ifeq ($(BLAS), atlas)
-			# Linux simply has cblas and atlas
-			LIBRARIES += cblas atlas
-		endif
-	else ifeq ($(OSX), 1)
-		# OS X packages atlas as the vecLib framework
-		BLAS_INCLUDE ?= /System/Library/Frameworks/vecLib.framework/Versions/Current/Headers/
-		LIBRARIES += cblas
-		LDFLAGS += -framework vecLib
-	endif
+    # ATLAS
+    ifeq ($(LINUX), 1)
+        ifeq ($(BLAS), atlas)
+            # Linux simply has cblas and atlas
+            LIBRARIES += cblas atlas
+        endif
+    else ifeq ($(OSX), 1)
+        # OS X packages atlas as the vecLib framework
+        BLAS_INCLUDE ?= /System/Library/Frameworks/vecLib.framework/Versions/Current/Headers/
+        LIBRARIES += cblas
+        LDFLAGS += -framework vecLib
+    endif
 endif
 INCLUDE_DIRS += $(BLAS_INCLUDE)
 LIBRARY_DIRS += $(BLAS_LIB)
@@ -327,12 +329,13 @@ LINKFLAGS += -pthread -fPIC $(COMMON_FLAGS) $(WARNINGS)
 
 USE_PKG_CONFIG ?= 0
 ifeq ($(USE_PKG_CONFIG), 1)
-	PKG_CONFIG := $(shell pkg-config opencv --libs)
+    PKG_CONFIG := $(shell pkg-config --libs)
+    # PKG_CONFIG := $(shell pkg-config opencv --libs)
 else
-	PKG_CONFIG :=
+    PKG_CONFIG :=
 endif
 LDFLAGS += $(foreach librarydir,$(LIBRARY_DIRS),-L$(librarydir)) $(PKG_CONFIG) \
-		$(foreach library,$(LIBRARIES),-l$(library))
+        $(foreach library,$(LIBRARIES),-l$(library))
 PYTHON_LDFLAGS := $(LDFLAGS) $(foreach library,$(PYTHON_LIBRARIES),-l$(library))
 
 # 'superclean' target recursively* deletes all files ending with an extension
@@ -350,54 +353,54 @@ SUPERCLEAN_EXTS := .so .a .o .bin .testbin .pb.cc .pb.h _pb2.py .cuo
 EVERYTHING_TARGETS := all py$(PROJECT) test warn lint
 # Only build matcaffe as part of "everything" if MATLAB_DIR is specified.
 ifneq ($(MATLAB_DIR),)
-	EVERYTHING_TARGETS += mat$(PROJECT)
+    EVERYTHING_TARGETS += mat$(PROJECT)
 endif
 
 ##############################
 # Define build targets
 ##############################
 .PHONY: all test clean docs linecount lint lintclean tools examples $(DIST_ALIASES) \
-	py mat py$(PROJECT) mat$(PROJECT) proto runtest \
-	superclean supercleanlist supercleanfiles warn everything
+    py mat py$(PROJECT) mat$(PROJECT) proto runtest \
+    superclean supercleanlist supercleanfiles warn everything
 
 all: $(STATIC_NAME) $(DYNAMIC_NAME) tools examples
 
 everything: $(EVERYTHING_TARGETS)
 
 linecount:
-	cloc --read-lang-def=$(PROJECT).cloc \
-		src/$(PROJECT) include/$(PROJECT) tools examples \
-		python matlab
+    cloc --read-lang-def=$(PROJECT).cloc \
+        src/$(PROJECT) include/$(PROJECT) tools examples \
+        python matlab
 
 lint: $(EMPTY_LINT_REPORT)
 
 lintclean:
-	@ $(RM) -r $(LINT_OUTPUT_DIR) $(EMPTY_LINT_REPORT) $(NONEMPTY_LINT_REPORT)
+    @ $(RM) -r $(LINT_OUTPUT_DIR) $(EMPTY_LINT_REPORT) $(NONEMPTY_LINT_REPORT)
 
 docs: $(DOXYGEN_OUTPUT_DIR)
-	@ cd ./docs ; ln -sfn ../$(DOXYGEN_OUTPUT_DIR)/html doxygen
+    @ cd ./docs ; ln -sfn ../$(DOXYGEN_OUTPUT_DIR)/html doxygen
 
 $(DOXYGEN_OUTPUT_DIR): $(DOXYGEN_CONFIG_FILE) $(DOXYGEN_SOURCES)
-	$(DOXYGEN_COMMAND) $(DOXYGEN_CONFIG_FILE)
+    $(DOXYGEN_COMMAND) $(DOXYGEN_CONFIG_FILE)
 
 $(EMPTY_LINT_REPORT): $(LINT_OUTPUTS) | $(BUILD_DIR)
-	@ cat $(LINT_OUTPUTS) > $@
-	@ if [ -s "$@" ]; then \
-		cat $@; \
-		mv $@ $(NONEMPTY_LINT_REPORT); \
-		echo "Found one or more lint errors."; \
-		exit 1; \
-	  fi; \
-	  $(RM) $(NONEMPTY_LINT_REPORT); \
-	  echo "No lint errors!";
+    @ cat $(LINT_OUTPUTS) > $@
+    @ if [ -s "$@" ]; then \
+        cat $@; \
+        mv $@ $(NONEMPTY_LINT_REPORT); \
+        echo "Found one or more lint errors."; \
+        exit 1; \
+      fi; \
+      $(RM) $(NONEMPTY_LINT_REPORT); \
+      echo "No lint errors!";
 
 $(LINT_OUTPUTS): $(LINT_OUTPUT_DIR)/%.lint.txt : % $(LINT_SCRIPT) | $(LINT_OUTPUT_DIR)
-	@ mkdir -p $(dir $@)
-	@ python $(LINT_SCRIPT) $< 2>&1 \
-		| grep -v "^Done processing " \
-		| grep -v "^Total errors found: 0" \
-		> $@ \
-		|| true
+    @ mkdir -p $(dir $@)
+    @ python $(LINT_SCRIPT) $< 2>&1 \
+        | grep -v "^Done processing " \
+        | grep -v "^Total errors found: 0" \
+        > $@ \
+        || true
 
 test: $(TEST_ALL_BIN) $(TEST_ALL_DYNLINK_BIN) $(TEST_BINS)
 
@@ -410,45 +413,45 @@ py$(PROJECT): py
 py: $(PY$(PROJECT)_SO) $(PROTO_GEN_PY)
 
 $(PY$(PROJECT)_SO): $(PY$(PROJECT)_SRC) $(STATIC_NAME) $(PY$(PROJECT)_HXX_SRC)
-	@ echo CXX $<
-	$(Q)$(CXX) -shared -o $@ $(PY$(PROJECT)_SRC) \
-		$(STATIC_LINK_COMMAND) $(LINKFLAGS) $(PYTHON_LDFLAGS)
+    @ echo CXX $<
+    $(Q)$(CXX) -shared -o $@ $(PY$(PROJECT)_SRC) \
+        $(STATIC_LINK_COMMAND) $(LINKFLAGS) $(PYTHON_LDFLAGS)
 
 mat$(PROJECT): mat
 
 mat: $(MAT$(PROJECT)_SO)
 
 $(MAT$(PROJECT)_SO): $(MAT$(PROJECT)_SRC) $(STATIC_NAME)
-	@ if [ -z "$(MATLAB_DIR)" ]; then \
-		echo "MATLAB_DIR must be specified in $(CONFIG_FILE)" \
-			"to build mat$(PROJECT)."; \
-		exit 1; \
-	fi
-	@ echo MEX $<
-	$(Q)$(MATLAB_DIR)/bin/mex $(MAT$(PROJECT)_SRC) \
-			CXX="$(CXX)" \
-			CXXFLAGS="\$$CXXFLAGS $(MATLAB_CXXFLAGS)" \
-			CXXLIBS="\$$CXXLIBS $(STATIC_LINK_COMMAND) $(LDFLAGS)" -output $@
+    @ if [ -z "$(MATLAB_DIR)" ]; then \
+        echo "MATLAB_DIR must be specified in $(CONFIG_FILE)" \
+            "to build mat$(PROJECT)."; \
+        exit 1; \
+    fi
+    @ echo MEX $<
+    $(Q)$(MATLAB_DIR)/bin/mex $(MAT$(PROJECT)_SRC) \
+            CXX="$(CXX)" \
+            CXXFLAGS="\$$CXXFLAGS $(MATLAB_CXXFLAGS)" \
+            CXXLIBS="\$$CXXLIBS $(STATIC_LINK_COMMAND) $(LDFLAGS)" -output $@
 
 runtest: $(TEST_ALL_BIN) $(TEST_ALL_DYNLINK_BIN)
-	$(TEST_ALL_BIN) $(TEST_GPUID) --gtest_shuffle $(TEST_FILTER) && \
-	$(TEST_ALL_DYNLINK_BIN) $(TEST_GPUID) --gtest_shuffle $(TEST_FILTER)
+    $(TEST_ALL_BIN) $(TEST_GPUID) --gtest_shuffle $(TEST_FILTER) && \
+    $(TEST_ALL_DYNLINK_BIN) $(TEST_GPUID) --gtest_shuffle $(TEST_FILTER)
 
 pytest: py
-	cd python; python -m unittest discover -s caffe/test
+    cd python; python -m unittest discover -s caffe/test
 
 warn: $(EMPTY_WARN_REPORT)
 
 $(EMPTY_WARN_REPORT): $(ALL_WARNS) | $(BUILD_DIR)
-	@ cat $(ALL_WARNS) > $@
-	@ if [ -s "$@" ]; then \
-		cat $@; \
-		mv $@ $(NONEMPTY_WARN_REPORT); \
-		echo "Compiler produced one or more warnings."; \
-		exit 1; \
-	  fi; \
-	  $(RM) $(NONEMPTY_WARN_REPORT); \
-	  echo "No compiler warnings!";
+    @ cat $(ALL_WARNS) > $@
+    @ if [ -s "$@" ]; then \
+        cat $@; \
+        mv $@ $(NONEMPTY_WARN_REPORT); \
+        echo "Compiler produced one or more warnings."; \
+        exit 1; \
+      fi; \
+      $(RM) $(NONEMPTY_WARN_REPORT); \
+      echo "No compiler warnings!";
 
 $(ALL_WARNS): %.o.$(WARNS_EXT) : %.o
 
@@ -458,137 +461,137 @@ $(BUILD_DIR_LINK): $(BUILD_DIR)/.linked
 # is currently correct, then delete the one in the OTHER_BUILD_DIR in case it
 # exists and $(DEBUG) is toggled later.
 $(BUILD_DIR)/.linked:
-	@ mkdir -p $(BUILD_DIR)
-	@ $(RM) $(OTHER_BUILD_DIR)/.linked
-	@ $(RM) -r $(BUILD_DIR_LINK)
-	@ ln -s $(BUILD_DIR) $(BUILD_DIR_LINK)
-	@ touch $@
+    @ mkdir -p $(BUILD_DIR)
+    @ $(RM) $(OTHER_BUILD_DIR)/.linked
+    @ $(RM) -r $(BUILD_DIR_LINK)
+    @ ln -s $(BUILD_DIR) $(BUILD_DIR_LINK)
+    @ touch $@
 
 $(ALL_BUILD_DIRS): | $(BUILD_DIR_LINK)
-	@ mkdir -p $@
+    @ mkdir -p $@
 
 $(DYNAMIC_NAME): $(OBJS) | $(LIB_BUILD_DIR)
-	@ echo LD $<
-	$(Q)$(CXX) -shared -o $@ $(OBJS) $(LINKFLAGS) $(LDFLAGS)
+    @ echo LD $<
+    $(Q)$(CXX) -shared -o $@ $(OBJS) $(LINKFLAGS) $(LDFLAGS)
 
 $(STATIC_NAME): $(OBJS) | $(LIB_BUILD_DIR)
-	@ echo AR $<
-	$(Q)ar rcs $@ $(OBJS)
+    @ echo AR $<
+    $(Q)ar rcs $@ $(OBJS)
 
 $(BUILD_DIR)/%.o: %.cpp | $(ALL_BUILD_DIRS)
-	@ echo CXX $<
-	$(Q)$(CXX) $< $(CXXFLAGS) -c -o $@ 2> $@.$(WARNS_EXT) \
-		|| (cat $@.$(WARNS_EXT); exit 1)
-	@ cat $@.$(WARNS_EXT)
+    @ echo CXX $<
+    $(Q)$(CXX) $< $(CXXFLAGS) -c -o $@ 2> $@.$(WARNS_EXT) \
+        || (cat $@.$(WARNS_EXT); exit 1)
+    @ cat $@.$(WARNS_EXT)
 
 $(PROTO_BUILD_DIR)/%.pb.o: $(PROTO_BUILD_DIR)/%.pb.cc $(PROTO_GEN_HEADER) \
-		| $(PROTO_BUILD_DIR)
-	@ echo CXX $<
-	$(Q)$(CXX) $< $(CXXFLAGS) -c -o $@ 2> $@.$(WARNS_EXT) \
-		|| (cat $@.$(WARNS_EXT); exit 1)
-	@ cat $@.$(WARNS_EXT)
+        | $(PROTO_BUILD_DIR)
+    @ echo CXX $<
+    $(Q)$(CXX) $< $(CXXFLAGS) -c -o $@ 2> $@.$(WARNS_EXT) \
+        || (cat $@.$(WARNS_EXT); exit 1)
+    @ cat $@.$(WARNS_EXT)
 
 $(BUILD_DIR)/cuda/%.o: %.cu | $(ALL_BUILD_DIRS)
-	@ echo NVCC $<
-	$(Q)$(CUDA_DIR)/bin/nvcc $(NVCCFLAGS) $(CUDA_ARCH) -M $< -o ${@:.o=.d} \
-		-odir $(@D)
-	$(Q)$(CUDA_DIR)/bin/nvcc $(NVCCFLAGS) $(CUDA_ARCH) -c $< -o $@ 2> $@.$(WARNS_EXT) \
-		|| (cat $@.$(WARNS_EXT); exit 1)
-	@ cat $@.$(WARNS_EXT)
+    @ echo NVCC $<
+    $(Q)$(CUDA_DIR)/bin/nvcc $(NVCCFLAGS) $(CUDA_ARCH) -M $< -o ${@:.o=.d} \
+        -odir $(@D)
+    $(Q)$(CUDA_DIR)/bin/nvcc $(NVCCFLAGS) $(CUDA_ARCH) -c $< -o $@ 2> $@.$(WARNS_EXT) \
+        || (cat $@.$(WARNS_EXT); exit 1)
+    @ cat $@.$(WARNS_EXT)
 
 $(TEST_ALL_BIN): $(TEST_MAIN_SRC) $(TEST_OBJS) $(GTEST_OBJ) $(STATIC_NAME) \
-		| $(TEST_BIN_DIR)
-	@ echo CXX/LD -o $@ $<
-	$(Q)$(CXX) $(TEST_MAIN_SRC) $(TEST_OBJS) $(GTEST_OBJ) $(STATIC_LINK_COMMAND) \
-		-o $@ $(LINKFLAGS) $(LDFLAGS)
+        | $(TEST_BIN_DIR)
+    @ echo CXX/LD -o $@ $<
+    $(Q)$(CXX) $(TEST_MAIN_SRC) $(TEST_OBJS) $(GTEST_OBJ) $(STATIC_LINK_COMMAND) \
+        -o $@ $(LINKFLAGS) $(LDFLAGS)
 
 $(TEST_ALL_DYNLINK_BIN): $(TEST_MAIN_SRC) $(TEST_OBJS) $(GTEST_OBJ) $(DYNAMIC_NAME) \
-		| $(TEST_BIN_DIR)
-	@ echo CXX/LD -o $@ $<
-	$(Q)$(CXX) $(TEST_MAIN_SRC) $(TEST_OBJS) $(GTEST_OBJ) \
-		-o $@ $(LINKFLAGS) $(LDFLAGS) -l$(PROJECT) -Wl,-rpath,$(LIB_BUILD_DIR)
+        | $(TEST_BIN_DIR)
+    @ echo CXX/LD -o $@ $<
+    $(Q)$(CXX) $(TEST_MAIN_SRC) $(TEST_OBJS) $(GTEST_OBJ) \
+        -o $@ $(LINKFLAGS) $(LDFLAGS) -l$(PROJECT) -Wl,-rpath,$(LIB_BUILD_DIR)
 
 $(TEST_CU_BINS): $(TEST_BIN_DIR)/%.testbin: $(TEST_CU_BUILD_DIR)/%.o \
-	$(GTEST_OBJ) $(STATIC_NAME) | $(TEST_BIN_DIR)
-	@ echo LD $<
-	$(Q)$(CXX) $(TEST_MAIN_SRC) $< $(GTEST_OBJ) $(STATIC_LINK_COMMAND) \
-		-o $@ $(LINKFLAGS) $(LDFLAGS)
+    $(GTEST_OBJ) $(STATIC_NAME) | $(TEST_BIN_DIR)
+    @ echo LD $<
+    $(Q)$(CXX) $(TEST_MAIN_SRC) $< $(GTEST_OBJ) $(STATIC_LINK_COMMAND) \
+        -o $@ $(LINKFLAGS) $(LDFLAGS)
 
 $(TEST_CXX_BINS): $(TEST_BIN_DIR)/%.testbin: $(TEST_CXX_BUILD_DIR)/%.o \
-	$(GTEST_OBJ) $(STATIC_NAME) | $(TEST_BIN_DIR)
-	@ echo LD $<
-	$(Q)$(CXX) $(TEST_MAIN_SRC) $< $(GTEST_OBJ) $(STATIC_LINK_COMMAND) \
-		-o $@ $(LINKFLAGS) $(LDFLAGS)
+    $(GTEST_OBJ) $(STATIC_NAME) | $(TEST_BIN_DIR)
+    @ echo LD $<
+    $(Q)$(CXX) $(TEST_MAIN_SRC) $< $(GTEST_OBJ) $(STATIC_LINK_COMMAND) \
+        -o $@ $(LINKFLAGS) $(LDFLAGS)
 
 # Target for extension-less symlinks to tool binaries with extension '*.bin'.
 $(TOOL_BUILD_DIR)/%: $(TOOL_BUILD_DIR)/%.bin | $(TOOL_BUILD_DIR)
-	@ $(RM) $@
-	@ ln -s $(abspath $<) $@
+    @ $(RM) $@
+    @ ln -s $(abspath $<) $@
 
 $(TOOL_BINS) $(EXAMPLE_BINS): %.bin : %.o $(STATIC_NAME)
-	@ echo LD $<
-	$(Q)$(CXX) $< $(STATIC_LINK_COMMAND) -o $@ $(LINKFLAGS) $(LDFLAGS)
+    @ echo LD $<
+    $(Q)$(CXX) $< $(STATIC_LINK_COMMAND) -o $@ $(LINKFLAGS) $(LDFLAGS)
 
 proto: $(PROTO_GEN_CC) $(PROTO_GEN_HEADER)
 
 $(PROTO_BUILD_DIR)/%.pb.cc $(PROTO_BUILD_DIR)/%.pb.h : \
-		$(PROTO_SRC_DIR)/%.proto | $(PROTO_BUILD_DIR)
-	@ echo PROTOC $<
-	$(Q)protoc --proto_path=$(PROTO_SRC_DIR) --cpp_out=$(PROTO_BUILD_DIR) $<
+        $(PROTO_SRC_DIR)/%.proto | $(PROTO_BUILD_DIR)
+    @ echo PROTOC $<
+    $(Q)protoc --proto_path=$(PROTO_SRC_DIR) --cpp_out=$(PROTO_BUILD_DIR) $<
 
 $(PY_PROTO_BUILD_DIR)/%_pb2.py : $(PROTO_SRC_DIR)/%.proto \
-		$(PY_PROTO_INIT) | $(PY_PROTO_BUILD_DIR)
-	@ echo PROTOC \(python\) $<
-	$(Q)protoc --proto_path=$(PROTO_SRC_DIR) --python_out=$(PY_PROTO_BUILD_DIR) $<
+        $(PY_PROTO_INIT) | $(PY_PROTO_BUILD_DIR)
+    @ echo PROTOC \(python\) $<
+    $(Q)protoc --proto_path=$(PROTO_SRC_DIR) --python_out=$(PY_PROTO_BUILD_DIR) $<
 
 $(PY_PROTO_INIT): | $(PY_PROTO_BUILD_DIR)
-	touch $(PY_PROTO_INIT)
+    touch $(PY_PROTO_INIT)
 
 clean:
-	@- $(RM) -rf $(ALL_BUILD_DIRS)
-	@- $(RM) -rf $(OTHER_BUILD_DIR)
-	@- $(RM) -rf $(BUILD_DIR_LINK)
-	@- $(RM) -rf $(DISTRIBUTE_DIR)
-	@- $(RM) $(PY$(PROJECT)_SO)
-	@- $(RM) $(MAT$(PROJECT)_SO)
+    @- $(RM) -rf $(ALL_BUILD_DIRS)
+    @- $(RM) -rf $(OTHER_BUILD_DIR)
+    @- $(RM) -rf $(BUILD_DIR_LINK)
+    @- $(RM) -rf $(DISTRIBUTE_DIR)
+    @- $(RM) $(PY$(PROJECT)_SO)
+    @- $(RM) $(MAT$(PROJECT)_SO)
 
 supercleanfiles:
-	$(eval SUPERCLEAN_FILES := $(strip \
-			$(foreach ext,$(SUPERCLEAN_EXTS), $(shell find . -name '*$(ext)' \
-			-not -path './data/*'))))
+    $(eval SUPERCLEAN_FILES := $(strip \
+            $(foreach ext,$(SUPERCLEAN_EXTS), $(shell find . -name '*$(ext)' \
+            -not -path './data/*'))))
 
 supercleanlist: supercleanfiles
-	@ \
-	if [ -z "$(SUPERCLEAN_FILES)" ]; then \
-		echo "No generated files found."; \
-	else \
-		echo $(SUPERCLEAN_FILES) | tr ' ' '\n'; \
-	fi
+    @ \
+    if [ -z "$(SUPERCLEAN_FILES)" ]; then \
+        echo "No generated files found."; \
+    else \
+        echo $(SUPERCLEAN_FILES) | tr ' ' '\n'; \
+    fi
 
 superclean: clean supercleanfiles
-	@ \
-	if [ -z "$(SUPERCLEAN_FILES)" ]; then \
-		echo "No generated files found."; \
-	else \
-		echo "Deleting the following generated files:"; \
-		echo $(SUPERCLEAN_FILES) | tr ' ' '\n'; \
-		$(RM) $(SUPERCLEAN_FILES); \
-	fi
+    @ \
+    if [ -z "$(SUPERCLEAN_FILES)" ]; then \
+        echo "No generated files found."; \
+    else \
+        echo "Deleting the following generated files:"; \
+        echo $(SUPERCLEAN_FILES) | tr ' ' '\n'; \
+        $(RM) $(SUPERCLEAN_FILES); \
+    fi
 
 $(DIST_ALIASES): $(DISTRIBUTE_DIR)
 
 $(DISTRIBUTE_DIR): all py | $(DISTRIBUTE_SUBDIRS)
-	# add include
-	cp -r include $(DISTRIBUTE_DIR)/
-	mkdir -p $(DISTRIBUTE_DIR)/include/caffe/proto
-	cp $(PROTO_GEN_HEADER_SRCS) $(DISTRIBUTE_DIR)/include/caffe/proto
-	# add tool and example binaries
-	cp $(TOOL_BINS) $(DISTRIBUTE_DIR)/bin
-	cp $(EXAMPLE_BINS) $(DISTRIBUTE_DIR)/bin
-	# add libraries
-	cp $(STATIC_NAME) $(DISTRIBUTE_DIR)/lib
-	cp $(DYNAMIC_NAME) $(DISTRIBUTE_DIR)/lib
-	# add python - it's not the standard way, indeed...
-	cp -r python $(DISTRIBUTE_DIR)/python
+    # add include
+    cp -r include $(DISTRIBUTE_DIR)/
+    mkdir -p $(DISTRIBUTE_DIR)/include/caffe/proto
+    cp $(PROTO_GEN_HEADER_SRCS) $(DISTRIBUTE_DIR)/include/caffe/proto
+    # add tool and example binaries
+    cp $(TOOL_BINS) $(DISTRIBUTE_DIR)/bin
+    cp $(EXAMPLE_BINS) $(DISTRIBUTE_DIR)/bin
+    # add libraries
+    cp $(STATIC_NAME) $(DISTRIBUTE_DIR)/lib
+    cp $(DYNAMIC_NAME) $(DISTRIBUTE_DIR)/lib
+    # add python - it's not the standard way, indeed...
+    cp -r python $(DISTRIBUTE_DIR)/python
 
 -include $(DEPS)
