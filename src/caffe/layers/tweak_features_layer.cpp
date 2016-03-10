@@ -175,7 +175,7 @@ void TweakFeaturesLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& top,
 
 
 #ifdef CPU_ONLY
-STUB_GPU(TweakFeaturesLayer);
+// STUB_GPU(TweakFeaturesLayer);
 #endif
 
 INSTANTIATE_CLASS(TweakFeaturesLayer);
