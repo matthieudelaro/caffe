@@ -1,3 +1,6 @@
+# Old version of Caffe
+Use https://github.com/matthieudelaro/caffeBVLCplus instead, which has been updated from Caffe master in April 2016.
+
 # Fork of Caffe 
 **This is a fork used for image reconstruction.**
   0. Locally Connected Layers: downgraded from pull request https://github.com/BVLC/caffe/pull/3068
